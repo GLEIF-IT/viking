@@ -1,14 +1,14 @@
 [project]
 name = "viking"
-version = "0.1.0"
-description = "Add your description here"
+version = "0.1.1"
+description = "ACDC Presentation Handler library"
 readme = "README.md"
 authors = [
     { name = "Kevin Griffin", email = "kevin.griffin@gleif.org" }
 ]
-requires-python = "==3.12.6"
+requires-python = ">=3.12.6"
 dependencies = [
-    "keri==1.2.6",
+    "keri==1.2.7",
 ]
 
 [build-system]

@@ -7,7 +7,8 @@ from .communicator import Communicator
 from .cue_baser import CueBaser
 from .presentation_proof_handler import PresentationProofHandler
 
-__all__ = ["setup"]
+__all__ = ['setup']
+
 
 def setup(hby: habbing.Habery, alias: str) -> [doing.Doer]:
     """
