@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 """
-Viking
-viking.core.handling module
+Vgate
+vgate.core.handling module
 
 EXN Message handling
 """
@@ -9,21 +9,31 @@ EXN Message handling
 import datetime
 import json
 from base64 import urlsafe_b64encode as encodeB64
-from typing import List
 from urllib import parse
 
-from hio.base import Doer, doing
+from hio.base import doing
 from hio.core import http
 from hio.help import Hict
 from keri import help, kering
 from keri.core import coring
 from keri.end import ending
 from keri.help import helping
-from keri.peer import exchanging
 
-from viking import httping
+from vgate import httping
 
 logger = help.ogler.getLogger()
+
+QVI_SCHEMA = 'EBfdlu8R27Fbx-ehrqwImnK-8Cm79sqbAQ4MmvEAYqao'
+LE_SCHEMA = 'ENPXp1vQzRF6JwIuS-mp2U8Uf1MoADoP_GqQ62VsDZWY'
+OOR_AUTH_SCHEMA = 'EKA57bKBKxr_kN7iN5i7lMUxpMG-s19dRcmov1iDxz-E'
+OOR_SCHEMA = 'EBNaNu-M9P5cgrnfl2Fvymy4E_jvxxyjb70PRtiANlJy'
+
+type_to_name = {
+    QVI_SCHEMA: 'QVI',
+    LE_SCHEMA: 'LE',
+    OOR_AUTH_SCHEMA: 'OOR_AUTH',
+    OOR_SCHEMA: 'OOR',
+}
 
 
 class Communicator(doing.DoDoer):
@@ -224,7 +234,7 @@ class Communicator(doing.DoDoer):
     def request(self, said, resource, action, actor, data):
         """
         Generate and launch HTTP request to remote webhook URL.
-        Adds custom Viking-Resource and Viking-Timestamp headers.
+        Adds custom vgate-Resource and vgate-Timestamp headers.
 
         Parameters:
             said (str): qb64 SAID of credential
@@ -234,7 +244,8 @@ class Communicator(doing.DoDoer):
             resource (str): the resource type that triggered the event
         """
         purl = parse.urlparse(self.hook)
-        client = http.clienting.Client(hostname=purl.hostname, port=purl.port)
+        hostname = purl.hostname if purl.hostname else 'localhost'
+        client = http.clienting.Client(hostname=hostname, port=purl.port)
         clientDoer = http.clienting.ClientDoer(client=client)
         self.extend([clientDoer])
 
@@ -246,20 +257,22 @@ class Communicator(doing.DoDoer):
                 ('Content-Type', 'application/json'),
                 ('Content-Length', len(raw)),
                 ('Connection', 'close'),
-                ('Viking-Resource', resource),
-                ('Viking-Timestamp', helping.nowIso8601()),
+                ('vgate-Resource', resource),
+                ('vgate-Timestamp', helping.nowIso8601()),
             ]
         )
         path = purl.path or '/'
 
-        keyid = encodeB64(self.hab.kever.serder.verfers[0].raw).decode('utf-8')
+        lastKelEvt = self.hab.kever.serder
+        lastPubKeyVerfer = lastKelEvt.verfers[0]
+        keyid = encodeB64(lastPubKeyVerfer.raw).decode('utf-8')
         header, unq = httping.siginput(
             self.hab,
             'sig0',
             'POST',
             path,
             headers,
-            fields=['Viking-Resource', '@method', '@path', 'Viking-Timestamp'],
+            fields=['vgate-Resource', '@method', '@path', 'vgate-Timestamp'],
             alg='ed25519',
             keyid=keyid,
         )
