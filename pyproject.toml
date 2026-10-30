@@ -8,7 +8,7 @@ authors = [
 ]
 requires-python = ">=3.12.6"
 dependencies = [
-    "gleif_keri==1.2.18",
+    "gleif_keri==1.2.19",
     "gleif_hio==0.6.22",
 ]
 
